@@ -1,4 +1,5 @@
 ﻿using AppRestAPIBasic.Business.Interfaces;
+using AppRestAPIBasic.Business.Services;
 using AppRestAPIBasic.Data.Context;
 using AppRestAPIBasic.Data.Repositories;
 
@@ -12,6 +13,9 @@ namespace AppRestAPIBasic.API.Configurations
             services.AddScoped<ISupplierRepository, SupplierRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ISupplierService, SupplierService>();
+            services.AddScoped<IProductService, ProductService>();
+            
             return services;
         }
     }
