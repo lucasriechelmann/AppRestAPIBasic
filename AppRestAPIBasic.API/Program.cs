@@ -19,6 +19,17 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Development", builder =>
+    {
+        builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
+
 builder.Services.ResolveDependencies();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -33,6 +44,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("Development");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
