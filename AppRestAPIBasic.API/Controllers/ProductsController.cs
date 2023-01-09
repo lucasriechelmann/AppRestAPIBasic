@@ -1,4 +1,5 @@
 ﻿using AppRestAPIBasic.Api.ViewModels;
+using AppRestAPIBasic.API.Extensions;
 using AppRestAPIBasic.Business.Interfaces;
 using AppRestAPIBasic.Business.Models;
 using AutoMapper;
@@ -53,6 +54,30 @@ namespace AppRestAPIBasic.API.Controllers
             await _productService.AddAsync(_mapper.Map<Product>(productViewModel));
 
             return CustomResponse();
+        }
+        [HttpPost("streaming")]
+        public async Task<IActionResult> PostWithStreaming([ModelBinder(BinderType = typeof(ProductModelBinder))] ProductImageViewModel productViewModel)
+        {
+            if (!ModelState.IsValid)
+                return CustomResponse(ModelState);
+
+            var imgPrefix = $"{Guid.NewGuid()}_";
+
+            if (!(await UploadImageStreaming(productViewModel.ImageUpload, imgPrefix)))
+                return CustomResponse();
+
+
+            productViewModel.Image = $"{imgPrefix}{productViewModel.Image}";
+
+            await _productService.AddAsync(_mapper.Map<Product>(productViewModel));
+
+            return CustomResponse();
+        }
+        [RequestSizeLimit(41943040)] // 40mb in bytes
+        [HttpPost("image")]
+        public async Task<IActionResult> Post(IFormFile image)
+        {
+            return await Task.FromResult(Ok(image));
         }
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update(Guid id, ProductViewModel productViewModel)
@@ -123,6 +148,28 @@ namespace AppRestAPIBasic.API.Controllers
             }
 
             System.IO.File.WriteAllBytes(filePath, imageDataByteArray);
+
+            return true;
+        }
+
+        private async Task<bool> UploadImageStreaming(IFormFile file, string imgPrefix)
+        {
+            if (file is null || file.Length <= 0)
+            {
+                NotifyError("Image is required.");
+                return false;
+            }
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", $"{imgPrefix}{file.FileName}");
+
+            if (System.IO.File.Exists(filePath))
+            {
+                NotifyError("Image already uploaded.");
+                return false;
+            }
+
+            await using var stream = new FileStream(filePath, FileMode.Create);
+            await file.CopyToAsync(stream);
 
             return true;
         }

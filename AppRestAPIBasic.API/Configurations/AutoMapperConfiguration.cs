@@ -12,6 +12,8 @@ namespace AppRestAPIBasic.API.Configurations
             CreateMap<Address, AddressViewModel>().ReverseMap();
             CreateMap<ProductViewModel, Product>();
 
+            CreateMap<ProductImageViewModel, Product>().ReverseMap();
+
             CreateMap<Product, ProductViewModel>()
                 .ForMember(dest => dest.SupplierName, opt => opt.MapFrom(src => src.Supplier.Name));
         }
