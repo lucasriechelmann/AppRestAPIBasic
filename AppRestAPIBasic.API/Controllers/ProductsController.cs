@@ -3,11 +3,13 @@ using AppRestAPIBasic.API.Extensions;
 using AppRestAPIBasic.Business.Interfaces;
 using AppRestAPIBasic.Business.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppRestAPIBasic.API.Controllers
 {
-    [Microsoft.AspNetCore.Components.Route("api/[controller]")]
+    [Authorize]
+    [Route("api/product")]
     public class ProductsController : MainController
     {
         private readonly IProductRepository _productRepository;
@@ -130,7 +132,7 @@ namespace AppRestAPIBasic.API.Controllers
             return CustomResponse(productViewModel);
         }
 
-        private bool UploadImage(string file, string imgName)
+        bool UploadImage(string file, string imgName)
         {
             if (string.IsNullOrEmpty(file))
             {
@@ -152,7 +154,7 @@ namespace AppRestAPIBasic.API.Controllers
             return true;
         }
 
-        private async Task<bool> UploadImageStreaming(IFormFile file, string imgPrefix)
+        async Task<bool> UploadImageStreaming(IFormFile file, string imgPrefix)
         {
             if (file is null || file.Length <= 0)
             {
@@ -174,7 +176,7 @@ namespace AppRestAPIBasic.API.Controllers
             return true;
         }
 
-        private async Task<ProductViewModel> GetProduct(Guid id) =>
+        async Task<ProductViewModel> GetProduct(Guid id) =>
             _mapper.Map<ProductViewModel>(await _productRepository.GetProductSupplierAsync(id));
     }
 }

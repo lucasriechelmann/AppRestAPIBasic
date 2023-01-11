@@ -2,11 +2,13 @@ using AppRestAPIBasic.Api.ViewModels;
 using AppRestAPIBasic.Business.Interfaces;
 using AppRestAPIBasic.Business.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppRestAPIBasic.API.Controllers;
 
-[Route("api/[controller]")]
+[Authorize]
+[Route("api/supplier")]
 public class SupplierController : MainController
 {
     private readonly ISupplierRepository _supplierRepository;
@@ -68,7 +70,7 @@ public class SupplierController : MainController
         return CustomResponse(supplierViewModel);
     }
 
-    [HttpDelete("{id:guid")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var supplier = await GetSupplierAddress(id);
@@ -101,11 +103,11 @@ public class SupplierController : MainController
 
         return CustomResponse(addressViewModel);
     }
-    public async Task<SupplierViewModel> GetSupplierProductsAddress(Guid id)
+    async Task<SupplierViewModel> GetSupplierProductsAddress(Guid id)
     {
         return _mapper.Map<SupplierViewModel>(await _supplierRepository.GetSupplierProductsAddressAsync(id));
     }
-    public async Task<SupplierViewModel> GetSupplierAddress(Guid id)
+    async Task<SupplierViewModel> GetSupplierAddress(Guid id)
     {
         return _mapper.Map<SupplierViewModel>(await _supplierRepository.GetSupplierAddressAsync(id));
     }

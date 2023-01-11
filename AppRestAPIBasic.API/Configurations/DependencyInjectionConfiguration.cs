@@ -1,4 +1,5 @@
 ﻿using AppRestAPIBasic.Business.Interfaces;
+using AppRestAPIBasic.Business.Notifications;
 using AppRestAPIBasic.Business.Services;
 using AppRestAPIBasic.Data.Context;
 using AppRestAPIBasic.Data.Repositories;
@@ -15,7 +16,9 @@ namespace AppRestAPIBasic.API.Configurations
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ISupplierService, SupplierService>();
             services.AddScoped<IProductService, ProductService>();
-            
+
+            services.AddScoped<INotifier, Notifier>();
+
             return services;
         }
     }

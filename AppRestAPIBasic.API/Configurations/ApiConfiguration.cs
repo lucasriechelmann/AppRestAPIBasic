@@ -16,13 +16,12 @@ public static class ApiConfiguration
 
         services.AddCors(options =>
         {
-            options.AddPolicy("Development", builder =>
-            {
-                builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials();
-            });
+            options.AddPolicy("Development",
+                    builder =>
+                        builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
         });
 
         return services;
@@ -37,6 +36,8 @@ public static class ApiConfiguration
         }
 
         app.UseHttpsRedirection();
+        app.UseRouting();
+        app.UseAuthentication();
         app.UseAuthorization();
         app.UseCors("Development");
 
