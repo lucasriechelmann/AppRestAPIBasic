@@ -1,4 +1,5 @@
 using AppRestAPIBasic.Api.ViewModels;
+using AppRestAPIBasic.API.Extensions;
 using AppRestAPIBasic.Business.Interfaces;
 using AppRestAPIBasic.Business.Models;
 using AutoMapper;
@@ -43,6 +44,7 @@ public class SupplierController : MainController
 
         return Ok(supplier);
     }
+    [ClaimsAuthorize("Supplier", "Add")]
     [HttpPost]
     public async Task<IActionResult> Post(SupplierViewModel supplierViewModel)
     {
@@ -53,6 +55,7 @@ public class SupplierController : MainController
 
         return CustomResponse(supplierViewModel);
     }
+    [ClaimsAuthorize("Supplier", "Edit")]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Put(Guid id, SupplierViewModel supplierViewModel)
     {
@@ -69,7 +72,7 @@ public class SupplierController : MainController
 
         return CustomResponse(supplierViewModel);
     }
-
+    [ClaimsAuthorize("Supplier", "Delete")]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
@@ -81,12 +84,13 @@ public class SupplierController : MainController
         await _supplierService.DeleteAsync(id);
         return CustomResponse();
     }
+    
     [HttpGet("get-address/{id:guid}")]
     public async Task<IActionResult> GetAddressById(Guid id)
     {
         return CustomResponse(_mapper.Map<AddressViewModel>(await _addressRepository.GetAddressBySupplierAsync(id)));
     }
-
+    [ClaimsAuthorize("Supplier", "Edit")]
     [HttpPut("update-address/{id:guid}")]
     public async Task<IActionResult> UpdateAddress(Guid id, AddressViewModel addressViewModel)
     {
