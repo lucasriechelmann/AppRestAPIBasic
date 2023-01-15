@@ -20,7 +20,8 @@ namespace AppRestAPIBasic.API.Controllers
         public AuthController(INotifier notifier, 
             SignInManager<IdentityUser> signInManager, 
             UserManager<IdentityUser> userManager,
-            IOptions<AppSettings> appSettings) : base(notifier)
+            IOptions<AppSettings> appSettings,
+            IUser appUser) : base(notifier, appUser)
         {
             _signInManager = signInManager;
             _userManager = userManager;

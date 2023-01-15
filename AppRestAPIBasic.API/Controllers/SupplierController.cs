@@ -21,13 +21,15 @@ public class SupplierController : MainController
         IMapper mapper, 
         ISupplierService supplierService, 
         INotifier notifier, 
-        IAddressRepository addressRepository) : base(notifier)
+        IAddressRepository addressRepository,
+        IUser appUser) : base(notifier, appUser)
     {
         _supplierRepository = supplierRepository;
         _mapper = mapper;
         _supplierService = supplierService;
         _addressRepository = addressRepository;
     }
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> Get()
     {

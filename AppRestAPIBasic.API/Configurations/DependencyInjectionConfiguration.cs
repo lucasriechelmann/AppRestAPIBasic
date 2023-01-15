@@ -1,4 +1,5 @@
-﻿using AppRestAPIBasic.Business.Interfaces;
+﻿using AppRestAPIBasic.API.Extensions;
+using AppRestAPIBasic.Business.Interfaces;
 using AppRestAPIBasic.Business.Notifications;
 using AppRestAPIBasic.Business.Services;
 using AppRestAPIBasic.Data.Context;
@@ -18,6 +19,8 @@ namespace AppRestAPIBasic.API.Configurations
             services.AddScoped<IProductService, ProductService>();
 
             services.AddScoped<INotifier, Notifier>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUser, AspNetUser>();
 
             return services;
         }

@@ -18,13 +18,14 @@ namespace AppRestAPIBasic.API.Controllers
         public ProductsController(INotifier notifier, 
             IProductRepository productRepository, 
             IProductService productService, 
-            IMapper mapper) : base(notifier)
+            IMapper mapper,
+            IUser appUser) : base(notifier, appUser)
         {
             _productRepository = productRepository;
             _productService = productService;
             _mapper = mapper;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -41,7 +42,7 @@ namespace AppRestAPIBasic.API.Controllers
 
             return CustomResponse(productViewModel);
         }
-
+        [ClaimsAuthorize("Product", "Add")]
         [HttpPost]
         public async Task<IActionResult> Post(ProductViewModel productViewModel)
         {
@@ -57,6 +58,7 @@ namespace AppRestAPIBasic.API.Controllers
 
             return CustomResponse();
         }
+        [ClaimsAuthorize("Product", "Add")]
         [HttpPost("streaming")]
         public async Task<IActionResult> PostWithStreaming([ModelBinder(BinderType = typeof(ProductModelBinder))] ProductImageViewModel productViewModel)
         {
@@ -75,12 +77,14 @@ namespace AppRestAPIBasic.API.Controllers
 
             return CustomResponse();
         }
+        [ClaimsAuthorize("Product", "Add")]
         [RequestSizeLimit(41943040)] // 40mb in bytes
         [HttpPost("image")]
         public async Task<IActionResult> Post(IFormFile image)
         {
             return await Task.FromResult(Ok(image));
         }
+        [ClaimsAuthorize("Product", "Edit")]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update(Guid id, ProductViewModel productViewModel)
         {
@@ -119,6 +123,7 @@ namespace AppRestAPIBasic.API.Controllers
 
             return CustomResponse(productViewModel);
         }
+        [ClaimsAuthorize("Product", "Delete")]
         [HttpDelete]
         public async Task<IActionResult> Delete(Guid id)
         {
