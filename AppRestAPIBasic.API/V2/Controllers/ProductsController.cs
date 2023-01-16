@@ -21,7 +21,8 @@ namespace AppRestAPIBasic.API.V2.Controllers
             IProductRepository productRepository,
             IProductService productService,
             IMapper mapper,
-            IUser appUser) : base(notifier, appUser)
+            IUser appUser,
+            ILogger<ProductsController> logger) : base(notifier, appUser, logger)
         {
             _productRepository = productRepository;
             _productService = productService;

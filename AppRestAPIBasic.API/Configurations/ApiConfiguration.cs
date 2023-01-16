@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AppRestAPIBasic.API.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AppRestAPIBasic.API.Configurations;
 
@@ -67,7 +68,8 @@ public static class ApiConfiguration
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-        
+
+        app.UseMiddleware<ExceptionMiddleware>();
 
         app.UseEndpoints(endpoints =>
         {

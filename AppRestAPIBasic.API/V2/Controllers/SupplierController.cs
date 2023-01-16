@@ -24,7 +24,8 @@ public class SupplierController : MainController
         ISupplierService supplierService,
         INotifier notifier,
         IAddressRepository addressRepository,
-        IUser appUser) : base(notifier, appUser)
+        IUser appUser,
+        ILogger<SupplierController> logger) : base(notifier, appUser, logger)
     {
         _supplierRepository = supplierRepository;
         _mapper = mapper;

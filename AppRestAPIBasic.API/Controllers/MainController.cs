@@ -10,12 +10,14 @@ namespace AppRestAPIBasic.API.Controllers
     public abstract class MainController : ControllerBase
     {
         private readonly INotifier _notifier;
+        protected readonly ILogger<MainController> _logger;
         protected readonly IUser AppUser;
         protected Guid UserId { get; set; }
         protected bool UserAuthenticated { get; set; }
-        protected MainController(INotifier notifier, IUser appUser)
+        protected MainController(INotifier notifier, IUser appUser, ILogger<MainController> logger)
         {
             _notifier = notifier;
+            _logger = logger;
             AppUser = appUser;
 
             if (appUser.IsAuthenticated())

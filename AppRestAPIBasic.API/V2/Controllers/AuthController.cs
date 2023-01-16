@@ -23,7 +23,8 @@ namespace AppRestAPIBasic.API.V2.Controllers
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
             IOptions<AppSettings> appSettings,
-            IUser appUser) : base(notifier, appUser)
+            IUser appUser,
+            ILogger<AuthController> logger) : base(notifier, appUser, logger)
         {
             _signInManager = signInManager;
             _userManager = userManager;
