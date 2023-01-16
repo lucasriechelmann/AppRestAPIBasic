@@ -1,4 +1,5 @@
 using AppRestAPIBasic.Api.ViewModels;
+using AppRestAPIBasic.API.Controllers;
 using AppRestAPIBasic.API.Extensions;
 using AppRestAPIBasic.Business.Interfaces;
 using AppRestAPIBasic.Business.Models;
@@ -6,10 +7,11 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AppRestAPIBasic.API.Controllers;
+namespace AppRestAPIBasic.API.V2.Controllers;
 
 [Authorize]
-[Route("api/supplier")]
+[ApiVersion("2.0")]
+[Route("api/v{version:apiVersion}/supplier")]
 public class SupplierController : MainController
 {
     private readonly ISupplierRepository _supplierRepository;
@@ -17,10 +19,10 @@ public class SupplierController : MainController
     private readonly IAddressRepository _addressRepository;
     readonly IMapper _mapper;
 
-    public SupplierController(ISupplierRepository supplierRepository, 
-        IMapper mapper, 
-        ISupplierService supplierService, 
-        INotifier notifier, 
+    public SupplierController(ISupplierRepository supplierRepository,
+        IMapper mapper,
+        ISupplierService supplierService,
+        INotifier notifier,
         IAddressRepository addressRepository,
         IUser appUser) : base(notifier, appUser)
     {
@@ -66,7 +68,7 @@ public class SupplierController : MainController
             NotifyError("The id in the route is different from the body");
             return CustomResponse();
         }
-        
+
         if (!ModelState.IsValid)
             return CustomResponse(ModelState);
 
@@ -86,7 +88,7 @@ public class SupplierController : MainController
         await _supplierService.DeleteAsync(id);
         return CustomResponse();
     }
-    
+
     [HttpGet("get-address/{id:guid}")]
     public async Task<IActionResult> GetAddressById(Guid id)
     {

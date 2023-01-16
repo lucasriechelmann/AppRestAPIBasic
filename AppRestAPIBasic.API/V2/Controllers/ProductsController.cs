@@ -1,4 +1,5 @@
 ﻿using AppRestAPIBasic.Api.ViewModels;
+using AppRestAPIBasic.API.Controllers;
 using AppRestAPIBasic.API.Extensions;
 using AppRestAPIBasic.Business.Interfaces;
 using AppRestAPIBasic.Business.Models;
@@ -6,18 +7,19 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AppRestAPIBasic.API.Controllers
+namespace AppRestAPIBasic.API.V2.Controllers
 {
     [Authorize]
-    [Route("api/product")]
+    [ApiVersion("2.0")]
+    [Route("api/v{version:apiVersion}/product")]
     public class ProductsController : MainController
     {
         private readonly IProductRepository _productRepository;
         readonly IProductService _productService;
         readonly IMapper _mapper;
-        public ProductsController(INotifier notifier, 
-            IProductRepository productRepository, 
-            IProductService productService, 
+        public ProductsController(INotifier notifier,
+            IProductRepository productRepository,
+            IProductService productService,
             IMapper mapper,
             IUser appUser) : base(notifier, appUser)
         {
@@ -67,7 +69,7 @@ namespace AppRestAPIBasic.API.Controllers
 
             var imgPrefix = $"{Guid.NewGuid()}_";
 
-            if (!(await UploadImageStreaming(productViewModel.ImageUpload, imgPrefix)))
+            if (!await UploadImageStreaming(productViewModel.ImageUpload, imgPrefix))
                 return CustomResponse();
 
 
@@ -99,7 +101,7 @@ namespace AppRestAPIBasic.API.Controllers
             if (string.IsNullOrEmpty(productViewModel.Image))
                 productViewModel.Image = productUpdate.Image;
 
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return CustomResponse(ModelState);
 
             if (productViewModel.ImageUpload != null)
@@ -144,7 +146,7 @@ namespace AppRestAPIBasic.API.Controllers
                 NotifyError("Image is required.");
                 return false;
             }
-            
+
             var imageDataByteArray = Convert.FromBase64String(file);
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", imgName);
 

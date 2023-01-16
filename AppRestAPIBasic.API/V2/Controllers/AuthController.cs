@@ -1,4 +1,5 @@
 ﻿using AppRestAPIBasic.Api.ViewModels;
+using AppRestAPIBasic.API.Controllers;
 using AppRestAPIBasic.API.Extensions;
 using AppRestAPIBasic.Business.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -9,16 +10,17 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace AppRestAPIBasic.API.Controllers
+namespace AppRestAPIBasic.API.V2.Controllers
 {
-    [Route("api/auth")]
+    [ApiVersion("2.0")]
+    [Route("api/v{version:apiVersion}/auth")]
     public class AuthController : MainController
     {
         readonly SignInManager<IdentityUser> _signInManager;
         readonly UserManager<IdentityUser> _userManager;
         readonly AppSettings _appSettings;
-        public AuthController(INotifier notifier, 
-            SignInManager<IdentityUser> signInManager, 
+        public AuthController(INotifier notifier,
+            SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
             IOptions<AppSettings> appSettings,
             IUser appUser) : base(notifier, appUser)
@@ -30,7 +32,7 @@ namespace AppRestAPIBasic.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterUserViewModel registerUserViewModel)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var user = new IdentityUser()
@@ -46,9 +48,9 @@ namespace AppRestAPIBasic.API.Controllers
             {
                 await _signInManager.SignInAsync(user, false);
                 return CustomResponse(await GenerateJwt(user.UserName));
-            }                            
-            
-            result.Errors.ToList().ForEach(error => NotifyError(error.Description));            
+            }
+
+            result.Errors.ToList().ForEach(error => NotifyError(error.Description));
 
             return CustomResponse();
         }
@@ -60,7 +62,7 @@ namespace AppRestAPIBasic.API.Controllers
 
             var result = await _signInManager.PasswordSignInAsync(loginUserViewModel.Password, loginUserViewModel.Password, false, true);
 
-            if(result.Succeeded) 
+            if (result.Succeeded)
                 return CustomResponse(await GenerateJwt(loginUserViewModel.Email));
 
             if (result.IsLockedOut)
@@ -122,4 +124,4 @@ namespace AppRestAPIBasic.API.Controllers
             => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
     }
 }
-}
+

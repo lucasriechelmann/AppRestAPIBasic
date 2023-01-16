@@ -29,12 +29,12 @@ namespace AppRestAPIBasic.API.Controllers
         {
             if (IsRequestValid())
                 return Ok(new { success = true, data = result });
-                        
+
             return BadRequest(new { uccess = true, errors = _notifier.GetNotifications().Select(x => x.Message) });
         }
         protected IActionResult CustomResponse(ModelStateDictionary modelState)
         {
-            if(!modelState.IsValid)
+            if (!modelState.IsValid)
                 return CustomResponse();
 
             return Ok();
