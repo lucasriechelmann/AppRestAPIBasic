@@ -1,6 +1,7 @@
 using AppRestAPIBasic.API.Configurations;
+using AppRestAPIBasic.API.Extensions;
 using AppRestAPIBasic.Data.Context;
-using Microsoft.AspNetCore.Mvc;
+using HealthChecks.UI.Core.Data;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,11 +18,21 @@ builder.Services.AddApiConfiguration();
 builder.Services.AddSwaggerConfig();
 
 builder.Services.ResolveDependencies();
+//builder.Services.AddHealthChecks()
+//    .AddCheck("Products", new SqlServerHealthCheck(builder.Configuration.GetConnectionString("DefaultConnection")))
+//    .AddSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), "SqlDatabase");
+//builder.Services.AddHealthChecksUI().AddSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+//using (var scope = app.Services.CreateScope())
+//{
+//    var healthChecksDb = scope.ServiceProvider.GetRequiredService<HealthChecksDb>();
+//    healthChecksDb.Database.Migrate();
+//}
 
 var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
